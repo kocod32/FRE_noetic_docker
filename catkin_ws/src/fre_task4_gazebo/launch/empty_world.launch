@@ -1,0 +1,35 @@
+<launch>
+  <arg name="world" default="$(find fre_task4_gazebo)/worlds/empty_task4.world"/>
+  <arg name="model" default="$(find fre_task4_description)/urdf/fre_robot_minimal.urdf.xacro"/>
+
+  <!-- Load robot description -->
+  <param name="robot_description" command="$(find xacro)/xacro $(arg model)" />
+
+  <!-- Start Gazebo -->
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="world_name" value="$(arg world)" />
+    <arg name="paused" value="false" />
+    <arg name="use_sim_time" value="true" />
+    <arg name="gui" value="true" />
+    <arg name="headless" value="false" />
+    <arg name="debug" value="false" />
+  </include>
+
+  <!-- Spawn robot from robot_description -->
+  <node name="spawn_fre_robot"
+        pkg="gazebo_ros"
+        type="spawn_model"
+        args="-urdf -param robot_description -model fre_robot -x 0 -y 0 -z 0.25"
+        output="screen" />
+
+  <!-- Publish TF from URDF -->
+  <node name="robot_state_publisher"
+        pkg="robot_state_publisher"
+        type="robot_state_publisher"
+        output="screen" />
+
+  <node name="joint_state_publisher"
+        pkg="joint_state_publisher"
+        type="joint_state_publisher"
+        output="screen" />
+</launch>

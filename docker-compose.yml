@@ -1,0 +1,23 @@
+services:
+  fre_noetic:
+    image: fre_noetic:latest
+    container_name: fre_noetic
+    network_mode: host
+    privileged: true
+    ipc: host
+    environment:
+      - DISPLAY=${DISPLAY}
+      - QT_X11_NO_MITSHM=1
+      - LIBGL_ALWAYS_SOFTWARE=0
+      - ROS_MASTER_URI=http://localhost:11311
+      - ROS_HOSTNAME=localhost
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+      - /dev:/dev
+      - ./catkin_ws:/root/catkin_ws
+      - ./bags:/root/bags
+      - ./maps:/root/maps
+    devices:
+      - /dev/dri:/dev/dri
+    stdin_open: true
+    tty: true

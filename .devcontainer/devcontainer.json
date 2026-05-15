@@ -1,0 +1,29 @@
+{
+  "name": "FRE Noetic Docker",
+  "dockerComposeFile": "../docker-compose.yml",
+  "service": "fre_noetic",
+  "workspaceFolder": "/root/catkin_ws",
+  "shutdownAction": "none",
+  "remoteUser": "root",
+  "containerEnv": {
+    "DISPLAY": "${localEnv:DISPLAY}",
+    "QT_X11_NO_MITSHM": "1",
+    "ROS_MASTER_URI": "http://localhost:11311",
+    "ROS_HOSTNAME": "localhost",
+    "DISABLE_ROS1_EOL_WARNINGS": "1"
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.python",
+        "ms-vscode.cmake-tools",
+        "redhat.vscode-xml",
+        "ms-azuretools.vscode-docker"
+      ],
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "bash",
+        "python.defaultInterpreterPath": "/usr/bin/python3"
+      }
+    }
+  }
+}

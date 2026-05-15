@@ -1,0 +1,37 @@
+# Catkin build artifacts
+catkin_ws/build/
+catkin_ws/devel/
+catkin_ws/install/
+catkin_ws/logs/
+catkin_ws/.catkin_tools/
+
+# ROS runtime logs
+.ros/
+log/
+*.log
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+
+# Bags and large recorded data
+bags/
+*.bag
+*.db3
+
+# Gazebo generated files
+.gazebo/
+
+# OS/editor files
+.DS_Store
+Thumbs.db
+*.tmp
+*.swp
+*~
+
+# VS Code local noise
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
