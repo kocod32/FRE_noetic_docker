@@ -19,7 +19,7 @@
     
     <model name="corner_pole_0">
       <static>true</static>
-      <pose>5.870 0.899 0.275 0 0 0</pose>
+      <pose>4.007 -1.365 0.275 0 0 0</pose>
       <link name="link">
         <visual name="visual">
           <geometry>
@@ -46,7 +46,7 @@
 
     <model name="reflector_0">
       <static>true</static>
-      <pose>5.870 0.899 0.600 0 0 0</pose>
+      <pose>4.007 -1.365 0.600 0 0 0</pose>
       <link name="link">
         <visual name="visual">
           <geometry>
@@ -71,7 +71,7 @@
 
     <model name="corner_pole_1">
       <static>true</static>
-      <pose>1.427 3.377 0.275 0 0 0</pose>
+      <pose>3.177 2.974 0.275 0 0 0</pose>
       <link name="link">
         <visual name="visual">
           <geometry>
@@ -98,7 +98,7 @@
 
     <model name="reflector_1">
       <static>true</static>
-      <pose>1.427 3.377 0.600 0 0 0</pose>
+      <pose>3.177 2.974 0.600 0 0 0</pose>
       <link name="link">
         <visual name="visual">
           <geometry>
@@ -123,7 +123,7 @@
 
     <model name="corner_pole_2">
       <static>true</static>
-      <pose>-0.616 2.982 0.275 0 0 0</pose>
+      <pose>2.310 2.945 0.275 0 0 0</pose>
       <link name="link">
         <visual name="visual">
           <geometry>
@@ -150,7 +150,7 @@
 
     <model name="reflector_2">
       <static>true</static>
-      <pose>-0.616 2.982 0.600 0 0 0</pose>
+      <pose>2.310 2.945 0.600 0 0 0</pose>
       <link name="link">
         <visual name="visual">
           <geometry>
@@ -175,7 +175,7 @@
 
     <model name="corner_pole_3">
       <static>true</static>
-      <pose>-3.510 2.590 0.275 0 0 0</pose>
+      <pose>2.462 3.956 0.275 0 0 0</pose>
       <link name="link">
         <visual name="visual">
           <geometry>
@@ -202,7 +202,7 @@
 
     <model name="reflector_3">
       <static>true</static>
-      <pose>-3.510 2.590 0.600 0 0 0</pose>
+      <pose>2.462 3.956 0.600 0 0 0</pose>
       <link name="link">
         <visual name="visual">
           <geometry>
@@ -227,7 +227,7 @@
 
     <model name="corner_pole_4">
       <static>true</static>
-      <pose>-4.113 3.043 0.275 0 0 0</pose>
+      <pose>0.762 2.361 0.275 0 0 0</pose>
       <link name="link">
         <visual name="visual">
           <geometry>
@@ -254,7 +254,7 @@
 
     <model name="reflector_4">
       <static>true</static>
-      <pose>-4.113 3.043 0.600 0 0 0</pose>
+      <pose>0.762 2.361 0.600 0 0 0</pose>
       <link name="link">
         <visual name="visual">
           <geometry>
@@ -279,7 +279,7 @@
 
     <model name="corner_pole_5">
       <static>true</static>
-      <pose>-4.593 0.386 0.275 0 0 0</pose>
+      <pose>-3.308 2.672 0.275 0 0 0</pose>
       <link name="link">
         <visual name="visual">
           <geometry>
@@ -306,7 +306,7 @@
 
     <model name="reflector_5">
       <static>true</static>
-      <pose>-4.593 0.386 0.600 0 0 0</pose>
+      <pose>-3.308 2.672 0.600 0 0 0</pose>
       <link name="link">
         <visual name="visual">
           <geometry>
@@ -331,7 +331,7 @@
 
     <model name="corner_pole_6">
       <static>true</static>
-      <pose>-3.747 0.066 0.275 0 0 0</pose>
+      <pose>-3.388 1.403 0.275 0 0 0</pose>
       <link name="link">
         <visual name="visual">
           <geometry>
@@ -358,7 +358,7 @@
 
     <model name="reflector_6">
       <static>true</static>
-      <pose>-3.747 0.066 0.600 0 0 0</pose>
+      <pose>-3.388 1.403 0.600 0 0 0</pose>
       <link name="link">
         <visual name="visual">
           <geometry>
@@ -383,7 +383,7 @@
 
     <model name="corner_pole_7">
       <static>true</static>
-      <pose>0.335 -7.511 0.275 0 0 0</pose>
+      <pose>-6.974 -1.637 0.275 0 0 0</pose>
       <link name="link">
         <visual name="visual">
           <geometry>
@@ -410,7 +410,7 @@
 
     <model name="reflector_7">
       <static>true</static>
-      <pose>0.335 -7.511 0.600 0 0 0</pose>
+      <pose>-6.974 -1.637 0.600 0 0 0</pose>
       <link name="link">
         <visual name="visual">
           <geometry>
@@ -435,7 +435,7 @@
 
     <model name="corner_pole_8">
       <static>true</static>
-      <pose>4.279 -4.481 0.275 0 0 0</pose>
+      <pose>-0.349 -7.492 0.275 0 0 0</pose>
       <link name="link">
         <visual name="visual">
           <geometry>
@@ -462,7 +462,7 @@
 
     <model name="reflector_8">
       <static>true</static>
-      <pose>4.279 -4.481 0.600 0 0 0</pose>
+      <pose>-0.349 -7.492 0.600 0 0 0</pose>
       <link name="link">
         <visual name="visual">
           <geometry>
@@ -487,7 +487,7 @@
 
     <model name="corner_pole_9">
       <static>true</static>
-      <pose>4.667 -1.351 0.275 0 0 0</pose>
+      <pose>1.301 -5.818 0.275 0 0 0</pose>
       <link name="link">
         <visual name="visual">
           <geometry>
@@ -514,7 +514,7 @@
 
     <model name="reflector_9">
       <static>true</static>
-      <pose>4.667 -1.351 0.600 0 0 0</pose>
+      <pose>1.301 -5.818 0.600 0 0 0</pose>
       <link name="link">
         <visual name="visual">
           <geometry>
@@ -539,12 +539,12 @@
 
     <model name="debug_boundary_0">
       <static>true</static>
-      <pose>3.649 2.138 0.015 0 0 2.633</pose>
+      <pose>3.592 0.805 0.015 0 0 1.760</pose>
       <link name="link">
         <visual name="visual">
           <geometry>
             <box>
-              <size>5.088 0.035 0.03</size>
+              <size>4.418 0.035 0.03</size>
             </box>
           </geometry>
           <material>
@@ -557,12 +557,12 @@
 
     <model name="debug_boundary_1">
       <static>true</static>
-      <pose>0.406 3.180 0.015 0 0 -2.951</pose>
+      <pose>2.744 2.960 0.015 0 0 -3.109</pose>
       <link name="link">
         <visual name="visual">
           <geometry>
             <box>
-              <size>2.081 0.035 0.03</size>
+              <size>0.868 0.035 0.03</size>
             </box>
           </geometry>
           <material>
@@ -575,12 +575,12 @@
 
     <model name="debug_boundary_2">
       <static>true</static>
-      <pose>-2.063 2.786 0.015 0 0 -3.007</pose>
+      <pose>2.386 3.451 0.015 0 0 1.421</pose>
       <link name="link">
         <visual name="visual">
           <geometry>
             <box>
-              <size>2.920 0.035 0.03</size>
+              <size>1.022 0.035 0.03</size>
             </box>
           </geometry>
           <material>
@@ -593,12 +593,12 @@
 
     <model name="debug_boundary_3">
       <static>true</static>
-      <pose>-3.812 2.816 0.015 0 0 2.497</pose>
+      <pose>1.612 3.159 0.015 0 0 -2.388</pose>
       <link name="link">
         <visual name="visual">
           <geometry>
             <box>
-              <size>0.755 0.035 0.03</size>
+              <size>2.332 0.035 0.03</size>
             </box>
           </geometry>
           <material>
@@ -611,12 +611,12 @@
 
     <model name="debug_boundary_4">
       <static>true</static>
-      <pose>-4.353 1.715 0.015 0 0 -1.749</pose>
+      <pose>-1.273 2.517 0.015 0 0 3.065</pose>
       <link name="link">
         <visual name="visual">
           <geometry>
             <box>
-              <size>2.700 0.035 0.03</size>
+              <size>4.082 0.035 0.03</size>
             </box>
           </geometry>
           <material>
@@ -629,12 +629,12 @@
 
     <model name="debug_boundary_5">
       <static>true</static>
-      <pose>-4.170 0.226 0.015 0 0 -0.362</pose>
+      <pose>-3.348 2.038 0.015 0 0 -1.633</pose>
       <link name="link">
         <visual name="visual">
           <geometry>
             <box>
-              <size>0.905 0.035 0.03</size>
+              <size>1.272 0.035 0.03</size>
             </box>
           </geometry>
           <material>
@@ -647,12 +647,12 @@
 
     <model name="debug_boundary_6">
       <static>true</static>
-      <pose>-1.706 -3.723 0.015 0 0 -1.077</pose>
+      <pose>-5.181 -0.117 0.015 0 0 -2.438</pose>
       <link name="link">
         <visual name="visual">
           <geometry>
             <box>
-              <size>8.607 0.035 0.03</size>
+              <size>4.701 0.035 0.03</size>
             </box>
           </geometry>
           <material>
@@ -665,12 +665,12 @@
 
     <model name="debug_boundary_7">
       <static>true</static>
-      <pose>2.307 -5.996 0.015 0 0 0.655</pose>
+      <pose>-3.662 -4.564 0.015 0 0 -0.724</pose>
       <link name="link">
         <visual name="visual">
           <geometry>
             <box>
-              <size>4.974 0.035 0.03</size>
+              <size>8.841 0.035 0.03</size>
             </box>
           </geometry>
           <material>
@@ -683,12 +683,12 @@
 
     <model name="debug_boundary_8">
       <static>true</static>
-      <pose>4.473 -2.916 0.015 0 0 1.448</pose>
+      <pose>0.476 -6.655 0.015 0 0 0.792</pose>
       <link name="link">
         <visual name="visual">
           <geometry>
             <box>
-              <size>3.154 0.035 0.03</size>
+              <size>2.350 0.035 0.03</size>
             </box>
           </geometry>
           <material>
@@ -701,12 +701,12 @@
 
     <model name="debug_boundary_9">
       <static>true</static>
-      <pose>5.269 -0.226 0.015 0 0 1.079</pose>
+      <pose>2.654 -3.592 0.015 0 0 1.025</pose>
       <link name="link">
         <visual name="visual">
           <geometry>
             <box>
-              <size>2.551 0.035 0.03</size>
+              <size>5.211 0.035 0.03</size>
             </box>
           </geometry>
           <material>
