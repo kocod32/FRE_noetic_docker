@@ -16,7 +16,7 @@
   <node name="spawn_fre_robot"
         pkg="gazebo_ros"
         type="spawn_model"
-        args="-urdf -param robot_description -model fre_robot -x -3.164 -y -4.129 -z 0.25 -Y 0.836"
+        args="-urdf -param robot_description -model fre_robot -x -1.536 -y 3.183 -z 0.25 -Y 2.102"
         output="screen" />
 
   <node name="robot_state_publisher"

@@ -1,0 +1,56 @@
+farmbeast:
+  joint_state_controller:
+    type: joint_state_controller/JointStateController
+    publish_rate: 50
+
+  left_front_z_axis_controller:
+    type: position_controllers/JointPositionController
+    joint: left_front_z_axis_joint
+    pid: {p: 8.0, i: 0.0, d: 0.2}
+
+  right_front_z_axis_controller:
+    type: position_controllers/JointPositionController
+    joint: right_front_z_axis_joint
+    pid: {p: 8.0, i: 0.0, d: 0.2}
+
+  left_back_z_axis_controller:
+    type: position_controllers/JointPositionController
+    joint: left_back_z_axis_joint
+    pid: {p: 8.0, i: 0.0, d: 0.2}
+
+  right_back_z_axis_controller:
+    type: position_controllers/JointPositionController
+    joint: right_back_z_axis_joint
+    pid: {p: 8.0, i: 0.0, d: 0.2}
+
+  left_front_wheel_controller:
+    type: velocity_controllers/JointVelocityController
+    joint: left_front_wheel_joint
+    pid: {p: 4.0, i: 0.0, d: 0.0}
+
+  right_front_wheel_controller:
+    type: velocity_controllers/JointVelocityController
+    joint: right_front_wheel_joint
+    pid: {p: 4.0, i: 0.0, d: 0.0}
+
+  left_back_wheel_controller:
+    type: velocity_controllers/JointVelocityController
+    joint: left_back_wheel_joint
+    pid: {p: 4.0, i: 0.0, d: 0.0}
+
+  right_back_wheel_controller:
+    type: velocity_controllers/JointVelocityController
+    joint: right_back_wheel_joint
+    pid: {p: 4.0, i: 0.0, d: 0.0}
+
+  gazebo_ros_control:
+    pid_gains:
+      left_front_z_axis_joint: {p: 8.0, i: 0.0, d: 0.2}
+      right_front_z_axis_joint: {p: 8.0, i: 0.0, d: 0.2}
+      left_back_z_axis_joint: {p: 8.0, i: 0.0, d: 0.2}
+      right_back_z_axis_joint: {p: 8.0, i: 0.0, d: 0.2}
+
+      left_front_wheel_joint: {p: 4.0, i: 0.0, d: 0.0}
+      right_front_wheel_joint: {p: 4.0, i: 0.0, d: 0.0}
+      left_back_wheel_joint: {p: 4.0, i: 0.0, d: 0.0}
+      right_back_wheel_joint: {p: 4.0, i: 0.0, d: 0.0}

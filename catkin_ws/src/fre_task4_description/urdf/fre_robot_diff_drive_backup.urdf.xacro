@@ -10,129 +10,12 @@
 
   <xacro:property name="wheel_radius" value="0.12"/>
   <xacro:property name="wheel_width"  value="0.06"/>
+  <xacro:property name="wheel_separation" value="0.76"/>
 
-  <xacro:property name="wheel_x_front" value="0.32"/>
-  <xacro:property name="wheel_x_rear"  value="-0.32"/>
-  <xacro:property name="wheel_y_left"  value="0.38"/>
-  <xacro:property name="wheel_y_right" value="-0.38"/>
-  <xacro:property name="wheel_z"       value="-0.155"/>
-
-  <!-- base_link center is 0.275 m above ground.
-       wheel center is at 0.275 - 0.155 = 0.120 m.
-       wheel radius is 0.120 m, so wheels touch the ground. -->
-
-  <!-- ===================== -->
-  <!-- Materials              -->
-  <!-- ===================== -->
-  <material name="dark_gray">
-    <color rgba="0.15 0.15 0.15 1.0"/>
-  </material>
-
-  <material name="black">
-    <color rgba="0.02 0.02 0.02 1.0"/>
-  </material>
-
-  <material name="blue">
-    <color rgba="0.0 0.2 1.0 1.0"/>
-  </material>
-
-  <material name="green">
-    <color rgba="0.0 0.8 0.2 1.0"/>
-  </material>
-
-  <material name="yellow">
-    <color rgba="1.0 0.8 0.0 1.0"/>
-  </material>
-
-  <material name="red">
-    <color rgba="1.0 0.0 0.0 1.0"/>
-  </material>
-
-  <!-- ===================== -->
-  <!-- Macro: 4WS wheel unit  -->
-  <!-- ===================== -->
-  <xacro:macro name="steered_wheel" params="prefix x y z">
-
-    <!-- Steering carrier. This is the part that turns around the vertical Z axis. -->
-    <link name="${prefix}_steering_link">
-      <visual>
-        <origin xyz="0 0 0" rpy="0 0 0"/>
-        <geometry>
-          <cylinder radius="0.045" length="0.06"/>
-        </geometry>
-        <material name="dark_gray"/>
-      </visual>
-
-      <collision>
-        <origin xyz="0 0 0" rpy="0 0 0"/>
-        <geometry>
-          <cylinder radius="0.045" length="0.06"/>
-        </geometry>
-      </collision>
-
-      <inertial>
-        <origin xyz="0 0 0"/>
-        <mass value="0.5"/>
-        <inertia ixx="0.005" ixy="0" ixz="0"
-                 iyy="0.005" iyz="0"
-                 izz="0.005"/>
-      </inertial>
-    </link>
-
-    <joint name="${prefix}_steering_joint" type="revolute">
-      <parent link="base_link"/>
-      <child link="${prefix}_steering_link"/>
-      <origin xyz="${x} ${y} ${z}" rpy="0 0 0"/>
-      <axis xyz="0 0 1"/>
-      <limit lower="-0.785" upper="0.785" effort="50.0" velocity="2.0"/>
-    </joint>
-
-    <!-- Wheel. This rotates around the local Y axis. -->
-    <link name="${prefix}_wheel_link">
-      <visual>
-        <origin xyz="0 0 0" rpy="1.5708 0 0"/>
-        <geometry>
-          <cylinder radius="${wheel_radius}" length="${wheel_width}"/>
-        </geometry>
-        <material name="black"/>
-      </visual>
-
-      <collision>
-        <origin xyz="0 0 0" rpy="1.5708 0 0"/>
-        <geometry>
-          <cylinder radius="${wheel_radius}" length="${wheel_width}"/>
-        </geometry>
-      </collision>
-
-      <inertial>
-        <origin xyz="0 0 0"/>
-        <mass value="1.0"/>
-        <inertia ixx="0.01" ixy="0" ixz="0"
-                 iyy="0.01" iyz="0"
-                 izz="0.01"/>
-      </inertial>
-    </link>
-
-    <joint name="${prefix}_wheel_joint" type="continuous">
-      <parent link="${prefix}_steering_link"/>
-      <child link="${prefix}_wheel_link"/>
-      <origin xyz="0 0 0" rpy="0 0 0"/>
-      <axis xyz="0 1 0"/>
-    </joint>
-
-    <gazebo reference="${prefix}_steering_link">
-      <material>Gazebo/DarkGrey</material>
-    </gazebo>
-
-    <gazebo reference="${prefix}_wheel_link">
-      <material>Gazebo/Black</material>
-      <mu1>5.0</mu1>
-      <mu2>5.0</mu2>
-      <kp>1000000.0</kp>
-      <kd>10.0</kd>
-    </gazebo>
-
-  </xacro:macro>
+  <!-- Robot is lifted so the chassis is not touching the ground.
+       Wheel center height = wheel_radius = 0.12 m.
+       base_link center height = 0.275 m.
+       Wheel joint z relative to base_link = 0.12 - 0.275 = -0.155 m. -->
 
   <!-- ===================== -->
   <!-- base_footprint         -->
@@ -154,7 +37,9 @@
       <geometry>
         <box size="${base_length} ${base_width} ${base_height}"/>
       </geometry>
-      <material name="dark_gray"/>
+      <material name="dark_gray">
+        <color rgba="0.15 0.15 0.15 1.0"/>
+      </material>
     </visual>
 
     <collision>
@@ -174,12 +59,78 @@
   </link>
 
   <!-- ===================== -->
-  <!-- Four steered wheels    -->
+  <!-- left wheel             -->
   <!-- ===================== -->
-  <xacro:steered_wheel prefix="front_left"  x="${wheel_x_front}" y="${wheel_y_left}"  z="${wheel_z}"/>
-  <xacro:steered_wheel prefix="front_right" x="${wheel_x_front}" y="${wheel_y_right}" z="${wheel_z}"/>
-  <xacro:steered_wheel prefix="rear_left"   x="${wheel_x_rear}"  y="${wheel_y_left}"  z="${wheel_z}"/>
-  <xacro:steered_wheel prefix="rear_right"  x="${wheel_x_rear}"  y="${wheel_y_right}" z="${wheel_z}"/>
+  <link name="left_wheel_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="1.5708 0 0"/>
+      <geometry>
+        <cylinder radius="${wheel_radius}" length="${wheel_width}"/>
+      </geometry>
+      <material name="black">
+        <color rgba="0.02 0.02 0.02 1.0"/>
+      </material>
+    </visual>
+
+    <collision>
+      <origin xyz="0 0 0" rpy="1.5708 0 0"/>
+      <geometry>
+        <cylinder radius="${wheel_radius}" length="${wheel_width}"/>
+      </geometry>
+    </collision>
+
+    <inertial>
+      <origin xyz="0 0 0"/>
+      <mass value="1.0"/>
+      <inertia ixx="0.01" ixy="0" ixz="0"
+               iyy="0.01" iyz="0"
+               izz="0.01"/>
+    </inertial>
+  </link>
+
+  <joint name="left_wheel_joint" type="continuous">
+    <parent link="base_link"/>
+    <child link="left_wheel_link"/>
+    <origin xyz="0.0 0.38 -0.155" rpy="0 0 0"/>
+    <axis xyz="0 1 0"/>
+  </joint>
+
+  <!-- ===================== -->
+  <!-- right wheel            -->
+  <!-- ===================== -->
+  <link name="right_wheel_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="1.5708 0 0"/>
+      <geometry>
+        <cylinder radius="${wheel_radius}" length="${wheel_width}"/>
+      </geometry>
+      <material name="black">
+        <color rgba="0.02 0.02 0.02 1.0"/>
+      </material>
+    </visual>
+
+    <collision>
+      <origin xyz="0 0 0" rpy="1.5708 0 0"/>
+      <geometry>
+        <cylinder radius="${wheel_radius}" length="${wheel_width}"/>
+      </geometry>
+    </collision>
+
+    <inertial>
+      <origin xyz="0 0 0"/>
+      <mass value="1.0"/>
+      <inertia ixx="0.01" ixy="0" ixz="0"
+               iyy="0.01" iyz="0"
+               izz="0.01"/>
+    </inertial>
+  </link>
+
+  <joint name="right_wheel_joint" type="continuous">
+    <parent link="base_link"/>
+    <child link="right_wheel_link"/>
+    <origin xyz="0.0 -0.38 -0.155" rpy="0 0 0"/>
+    <axis xyz="0 1 0"/>
+  </joint>
 
   <!-- ===================== -->
   <!-- lidar                  -->
@@ -189,7 +140,9 @@
       <geometry>
         <cylinder radius="0.05" length="0.06"/>
       </geometry>
-      <material name="blue"/>
+      <material name="blue">
+        <color rgba="0.0 0.2 1.0 1.0"/>
+      </material>
     </visual>
 
     <collision>
@@ -221,7 +174,9 @@
       <geometry>
         <box size="0.08 0.03 0.03"/>
       </geometry>
-      <material name="green"/>
+      <material name="green">
+        <color rgba="0.0 0.8 0.2 1.0"/>
+      </material>
     </visual>
 
     <collision>
@@ -250,6 +205,7 @@
   <joint name="front_camera_to_optical" type="fixed">
     <parent link="front_camera_link"/>
     <child link="front_camera_optical_frame"/>
+    <!-- ROS optical frame convention: z forward, x right, y down -->
     <origin xyz="0 0 0" rpy="-1.5708 0 -1.5708"/>
   </joint>
 
@@ -261,7 +217,9 @@
       <geometry>
         <box size="0.08 0.03 0.03"/>
       </geometry>
-      <material name="yellow"/>
+      <material name="yellow">
+        <color rgba="1.0 0.8 0.0 1.0"/>
+      </material>
     </visual>
 
     <collision>
@@ -301,7 +259,9 @@
       <geometry>
         <cylinder radius="0.025" length="0.12"/>
       </geometry>
-      <material name="red"/>
+      <material name="red">
+        <color rgba="1.0 0.0 0.0 1.0"/>
+      </material>
     </visual>
 
     <collision>
@@ -326,10 +286,26 @@
   </joint>
 
   <!-- ===================== -->
-  <!-- Gazebo materials       -->
+  <!-- Gazebo visual/friction -->
   <!-- ===================== -->
   <gazebo reference="base_link">
     <material>Gazebo/DarkGrey</material>
+  </gazebo>
+
+  <gazebo reference="left_wheel_link">
+    <material>Gazebo/Black</material>
+    <mu1>5.0</mu1>
+    <mu2>5.0</mu2>
+    <kp>1000000.0</kp>
+    <kd>10.0</kd>
+  </gazebo>
+
+  <gazebo reference="right_wheel_link">
+    <material>Gazebo/Black</material>
+    <mu1>5.0</mu1>
+    <mu2>5.0</mu2>
+    <kp>1000000.0</kp>
+    <kd>10.0</kd>
   </gazebo>
 
   <gazebo reference="lidar_link">
@@ -349,21 +325,35 @@
   </gazebo>
 
   <!-- ===================== -->
-  <!-- Simple planar movement -->
+  <!-- Differential drive     -->
   <!-- ===================== -->
-  <!-- This is not a real 4-wheel-steering controller.
-       It is a simple /cmd_vel movement plugin used for local simulation.
-       The robot has a 4WS-style TF/visual structure, while motion stays simple
-       and stable for mapping/localization tests. -->
   <gazebo>
-    <plugin name="fre_planar_move" filename="libgazebo_ros_planar_move.so">
+    <plugin name="fre_diff_drive" filename="libgazebo_ros_diff_drive.so">
+      <legacyMode>false</legacyMode>
+
+      <leftJoint>left_wheel_joint</leftJoint>
+      <rightJoint>right_wheel_joint</rightJoint>
+
+      <wheelSeparation>${wheel_separation}</wheelSeparation>
+      <wheelDiameter>${2.0 * wheel_radius}</wheelDiameter>
+
+      <wheelTorque>80</wheelTorque>
+      <wheelAcceleration>5.0</wheelAcceleration>
+
       <commandTopic>cmd_vel</commandTopic>
       <odometryTopic>odom</odometryTopic>
       <odometryFrame>odom</odometryFrame>
       <robotBaseFrame>base_footprint</robotBaseFrame>
+
+      <publishTf>true</publishTf>
       <publishOdomTF>true</publishOdomTF>
-      <publishOdometryTf>true</publishOdometryTf>
-      <updateRate>50.0</updateRate>
+      <publishWheelTF>false</publishWheelTF>
+      <publishWheelJointState>true</publishWheelJointState>
+
+      <odometrySource>world</odometrySource>
+      <updateRate>50</updateRate>
+
+      <rosDebugLevel>na</rosDebugLevel>
     </plugin>
   </gazebo>
 

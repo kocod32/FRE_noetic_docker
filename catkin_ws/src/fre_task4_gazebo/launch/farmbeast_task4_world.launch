@@ -1,0 +1,46 @@
+<launch>
+  <arg name="world" default="$(find fre_task4_gazebo)/worlds/generated_task4.world"/>
+  <arg name="model" default="$(find fre_task4_description)/urdf/farmbeast_robot.urdf.xacro"/>
+
+  <param name="robot_description" command="$(find xacro)/xacro $(arg model)" />
+
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="world_name" value="$(arg world)" />
+    <arg name="paused" value="false" />
+    <arg name="use_sim_time" value="true" />
+    <arg name="gui" value="true" />
+    <arg name="headless" value="false" />
+    <arg name="debug" value="false" />
+  </include>
+
+  <node name="spawn_fre_robot"
+        pkg="gazebo_ros"
+        type="spawn_model"
+        args="-urdf -param robot_description -model fre_robot -x 1.061 -y -2.235 -z 0.35 -Y 0.432"
+        output="screen" />
+
+  <node name="robot_state_publisher"
+        pkg="robot_state_publisher"
+        type="robot_state_publisher"
+        output="screen" />
+
+  <rosparam file="$(find fre_task4_control)/config/farmbeast_controllers.yaml"
+            command="load" />
+
+  <node name="controller_spawner"
+        pkg="controller_manager"
+        type="spawner"
+        respawn="false"
+        output="screen"
+        ns="/farmbeast"
+        args="
+          joint_state_controller
+          left_front_z_axis_controller
+          right_front_z_axis_controller
+          left_back_z_axis_controller
+          right_back_z_axis_controller
+          left_front_wheel_controller
+          right_front_wheel_controller
+          left_back_wheel_controller
+          right_back_wheel_controller" />
+</launch>
