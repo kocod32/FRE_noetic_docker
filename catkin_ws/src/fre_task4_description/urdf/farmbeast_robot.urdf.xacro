@@ -49,11 +49,16 @@
   <xacro:property name="wheel_radius" value="0.10"/>
   <xacro:property name="wheel_width" value="0.045"/>
   <xacro:property name="wheel_z" value="0.10"/>
+
   <xacro:property name="wheel_x_front" value="0.22"/>
   <xacro:property name="wheel_x_back" value="-0.22"/>
-  <xacro:property name="steer_y_left" value="0.28"/>
-  <xacro:property name="steer_y_right" value="-0.28"/>
-  <xacro:property name="wheel_side_offset" value="0.07"/>
+
+  <!-- Chassis_y = 0.42, half-width = 0.21.
+       Steering axis is just outside the chassis side.
+       Wheel center is slightly farther out, so the wheel visually sits close to the body. -->
+  <xacro:property name="steer_y_left" value="0.225"/>
+  <xacro:property name="steer_y_right" value="-0.225"/>
+  <xacro:property name="wheel_side_offset" value="0.035"/>
 
   <xacro:property name="steer_radius" value="0.025"/>
   <xacro:property name="steer_length" value="0.12"/>

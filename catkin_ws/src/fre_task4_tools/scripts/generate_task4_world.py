@@ -12,7 +12,6 @@ MIN_VERTICES = 8
 MAX_VERTICES = 15
 
 WORLD_OUT = Path("/root/catkin_ws/src/fre_task4_gazebo/worlds/generated_task4.world")
-LAUNCH_OUT = Path("/root/catkin_ws/src/fre_task4_gazebo/launch/generated_task4_world.launch")
 
 
 def polygon_area(points):
@@ -44,8 +43,9 @@ def point_in_polygon(point, polygon):
         xi, yi = polygon[i]
         xj, yj = polygon[j]
 
-        intersect = ((yi > y) != (yj > y)) and \
-                    (x < (xj - xi) * (y - yi) / ((yj - yi) + 1e-9) + xi)
+        intersect = ((yi > y) != (yj > y)) and (
+            x < (xj - xi) * (y - yi) / ((yj - yi) + 1e-9) + xi
+        )
 
         if intersect:
             inside = not inside
@@ -58,21 +58,23 @@ def point_in_polygon(point, polygon):
 def generate_polygon():
     vertex_count = random.randint(MIN_VERTICES, MAX_VERTICES)
 
-    angles = sorted([random.uniform(0, 2 * math.pi) for _ in range(vertex_count)])
+    angles = sorted(
+        random.uniform(0, 2 * math.pi)
+        for _ in range(vertex_count)
+    )
 
     points = []
     for angle in angles:
-        # Radius variation gives an irregular but still mostly convex polygon.
         radius = random.uniform(3.0, 5.5)
         x = radius * math.cos(angle)
         y = radius * math.sin(angle)
         points.append((x, y))
 
-    # Move centroid to origin.
+    # Move centroid near origin.
     cx, cy = polygon_centroid(points)
     points = [(x - cx, y - cy) for x, y in points]
 
-    # Scale polygon to random target area between 60 and 70 m².
+    # Scale polygon to target area.
     current_area = polygon_area(points)
     target_area = random.uniform(MIN_AREA, MAX_AREA)
     scale = math.sqrt(target_area / current_area)
@@ -173,7 +175,6 @@ def make_boundary_segment(name, p1, p2):
     length = math.sqrt(dx * dx + dy * dy)
     yaw = math.atan2(dy, dx)
 
-    # Thin low visual line on the ground. This is only for debugging in simulation.
     return f"""
     <model name="{name}">
       <static>true</static>
@@ -199,7 +200,6 @@ def create_world(polygon):
     models = ""
 
     for i, (x, y) in enumerate(polygon):
-        # Pole
         models += make_cylinder_model(
             name=f"corner_pole_{i}",
             x=x,
@@ -207,17 +207,16 @@ def create_world(polygon):
             z=0.275,
             radius=0.03,
             length=0.55,
-            rgba="0.05 0.05 0.05 1"
+            rgba="0.05 0.05 0.05 1",
         )
 
-        # Reflector on top of pole
         models += make_sphere_model(
             name=f"reflector_{i}",
             x=x,
             y=y,
             z=0.6,
             radius=0.07,
-            rgba="1.0 0.6 0.05 1"
+            rgba="1.0 0.6 0.05 1",
         )
 
     for i in range(len(polygon)):
@@ -225,7 +224,7 @@ def create_world(polygon):
         p2 = polygon[(i + 1) % len(polygon)]
         models += make_boundary_segment(f"debug_boundary_{i}", p1, p2)
 
-    world = f"""<?xml version="1.0" ?>
+    return f"""<?xml version="1.0" ?>
 <sdf version="1.6">
   <world name="generated_task4_world">
 
@@ -248,65 +247,26 @@ def create_world(polygon):
   </world>
 </sdf>
 """
-    return world
-
-
-def create_launch(robot_x, robot_y, robot_yaw):
-    launch = f"""<launch>
-  <arg name="world" default="$(find fre_task4_gazebo)/worlds/generated_task4.world"/>
-  <arg name="model" default="$(find fre_task4_description)/urdf/fre_robot_minimal.urdf.xacro"/>
-
-  <param name="robot_description" command="$(find xacro)/xacro $(arg model)" />
-
-  <include file="$(find gazebo_ros)/launch/empty_world.launch">
-    <arg name="world_name" value="$(arg world)" />
-    <arg name="paused" value="false" />
-    <arg name="use_sim_time" value="true" />
-    <arg name="gui" value="true" />
-    <arg name="headless" value="false" />
-    <arg name="debug" value="false" />
-  </include>
-
-  <node name="spawn_fre_robot"
-        pkg="gazebo_ros"
-        type="spawn_model"
-        args="-urdf -param robot_description -model fre_robot -x {robot_x:.3f} -y {robot_y:.3f} -z 0.25 -Y {robot_yaw:.3f}"
-        output="screen" />
-
-  <node name="robot_state_publisher"
-        pkg="robot_state_publisher"
-        type="robot_state_publisher"
-        output="screen" />
-
-  <node name="joint_state_publisher"
-        pkg="joint_state_publisher"
-        type="joint_state_publisher"
-        output="screen" />
-</launch>
-"""
-    return launch
 
 
 def main():
     WORLD_OUT.parent.mkdir(parents=True, exist_ok=True)
-    LAUNCH_OUT.parent.mkdir(parents=True, exist_ok=True)
 
     polygon = generate_polygon()
     area = polygon_area(polygon)
     robot_x, robot_y, robot_yaw = random_pose_inside_polygon(polygon)
 
     world_text = create_world(polygon)
-    launch_text = create_launch(robot_x, robot_y, robot_yaw)
-
     WORLD_OUT.write_text(world_text)
-    LAUNCH_OUT.write_text(launch_text)
 
     print("Generated FRE Task 4 world")
     print(f"Polygon vertices: {len(polygon)}")
     print(f"Polygon area: {area:.2f} m²")
-    print(f"Robot spawn: x={robot_x:.2f}, y={robot_y:.2f}, yaw={robot_yaw:.2f}")
+    print(f"Suggested robot spawn: x={robot_x:.2f}, y={robot_y:.2f}, yaw={robot_yaw:.2f}")
     print(f"World file: {WORLD_OUT}")
-    print(f"Launch file: {LAUNCH_OUT}")
+    print("")
+    print("Launch manually with:")
+    print("roslaunch fre_task4_gazebo farmbeast_task4_world.launch")
 
 
 if __name__ == "__main__":

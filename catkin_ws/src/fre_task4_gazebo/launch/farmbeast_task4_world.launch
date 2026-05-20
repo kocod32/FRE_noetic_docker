@@ -13,34 +13,31 @@
     <arg name="debug" value="false" />
   </include>
 
-  <node name="spawn_fre_robot"
+  <node name="spawn_farmbeast"
         pkg="gazebo_ros"
         type="spawn_model"
-        args="-urdf -param robot_description -model fre_robot -x 1.061 -y -2.235 -z 0.35 -Y 0.432"
+        args="-urdf -param robot_description -model fre_robot -x 0 -y 0 -z 0.25 -Y 0"
         output="screen" />
+
+  <rosparam file="$(find fre_task4_control)/config/farmbeast_controllers.yaml" command="load"/>
+
+  <node name="controller_spawner"
+        pkg="controller_manager"
+        type="spawner"
+        ns="/farmbeast"
+        args="joint_state_controller
+              left_front_z_axis_controller
+              right_front_z_axis_controller
+              left_back_z_axis_controller
+              right_back_z_axis_controller
+              left_front_wheel_controller
+              right_front_wheel_controller
+              left_back_wheel_controller
+              right_back_wheel_controller"
+        output="screen"/>
 
   <node name="robot_state_publisher"
         pkg="robot_state_publisher"
         type="robot_state_publisher"
         output="screen" />
-
-  <rosparam file="$(find fre_task4_control)/config/farmbeast_controllers.yaml"
-            command="load" />
-
-  <node name="controller_spawner"
-        pkg="controller_manager"
-        type="spawner"
-        respawn="false"
-        output="screen"
-        ns="/farmbeast"
-        args="
-          joint_state_controller
-          left_front_z_axis_controller
-          right_front_z_axis_controller
-          left_back_z_axis_controller
-          right_back_z_axis_controller
-          left_front_wheel_controller
-          right_front_wheel_controller
-          left_back_wheel_controller
-          right_back_wheel_controller" />
 </launch>
