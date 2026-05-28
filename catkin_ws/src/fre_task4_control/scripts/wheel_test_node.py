@@ -9,25 +9,33 @@ class FarmbeastWheelTest:
     def __init__(self):
         rospy.init_node("farmbeast_wheel_test_node")
 
-        self.mode = rospy.get_param("~mode", "forward")
+        self.mode = rospy.get_param("~mode", "stop")
 
-        # For simple modes
-        self.speed = rospy.get_param("~speed", 0.5)  # rad/s
+        # General wheel command
+        self.speed = rospy.get_param("~speed", 0.3)
 
-        # Geometry from current URDF
-        self.wheel_radius = rospy.get_param("~wheel_radius", 0.10)
+        # Circle / spin parameters
+        self.linear_speed = rospy.get_param("~linear_speed", 0.05)
+        self.circle_radius = rospy.get_param("~circle_radius", 3.0)
+
+        # Robot geometry. Use your current approximate robot dimensions.
         self.wheelbase = rospy.get_param("~wheelbase", 0.44)
         self.track_width = rospy.get_param("~track_width", 0.565)
+        self.wheel_radius = rospy.get_param("~wheel_radius", 0.10)
 
-        # Circle mode
-        self.circle_radius = rospy.get_param("~circle_radius", 3.0)
-        self.linear_speed = rospy.get_param("~linear_speed", 0.15)
+        # Safety limits
+        self.max_wheel_speed = rospy.get_param("~max_wheel_speed", 0.5)
+        self.max_steer_angle = rospy.get_param("~max_steer_angle", 0.35)
 
-        # Safety
-        self.max_wheel_speed = rospy.get_param("~max_wheel_speed", 1.5)
-        self.max_steer_angle = rospy.get_param("~max_steer_angle", 0.35)  # rad, about 20 deg
-        self.accel_limit = rospy.get_param("~accel_limit", 0.25)          # rad/s/s for wheel speed
-        self.steer_rate_limit = rospy.get_param("~steer_rate_limit", 0.20) # rad/s
+        # Rate limits
+        self.wheel_accel_limit = rospy.get_param("~accel_limit", 0.08)          # rad/s/s
+        self.steer_rate_limit = rospy.get_param("~steer_rate_limit", 0.05)      # rad/s
+
+        # For near in-place spin. Larger = safer, smaller = more aggressive.
+        self.spin_speed = rospy.get_param("~spin_speed", 0.18)
+        self.spin_steer_angle = rospy.get_param("~spin_steer_angle", 0.35)
+
+        self.rate_hz = rospy.get_param("~rate", 30.0)
 
         self.wheel_pubs = {
             "left_front": rospy.Publisher("/farmbeast/left_front_wheel_controller/command", Float64, queue_size=10),
@@ -43,174 +51,222 @@ class FarmbeastWheelTest:
             "right_back": rospy.Publisher("/farmbeast/right_back_z_axis_controller/command", Float64, queue_size=10),
         }
 
-        self.current_wheel_cmd = {
+        self.current_wheel = {
             "left_front": 0.0,
             "right_front": 0.0,
             "left_back": 0.0,
             "right_back": 0.0,
         }
 
-        self.current_steer_cmd = {
+        self.current_steer = {
             "left_front": 0.0,
             "right_front": 0.0,
             "left_back": 0.0,
             "right_back": 0.0,
         }
+
+        rospy.sleep(1.0)
 
         rospy.loginfo("Farmbeast wheel test node started")
         rospy.loginfo("Mode: %s", self.mode)
-        rospy.loginfo("Wheel radius: %.3f m", self.wheel_radius)
-        rospy.loginfo("Wheelbase: %.3f m", self.wheelbase)
-        rospy.loginfo("Track width: %.3f m", self.track_width)
-        rospy.loginfo("Circle radius: %.3f m", self.circle_radius)
-        rospy.loginfo("Linear speed: %.3f m/s", self.linear_speed)
+        rospy.loginfo("speed: %.3f rad/s", self.speed)
+        rospy.loginfo("linear_speed: %.3f m/s", self.linear_speed)
+        rospy.loginfo("circle_radius: %.3f m", self.circle_radius)
+        rospy.loginfo("wheelbase: %.3f m", self.wheelbase)
+        rospy.loginfo("track_width: %.3f m", self.track_width)
+        rospy.loginfo("wheel_radius: %.3f m", self.wheel_radius)
+        rospy.loginfo("max_wheel_speed: %.3f rad/s", self.max_wheel_speed)
+        rospy.loginfo("max_steer_angle: %.3f rad", self.max_steer_angle)
+        rospy.loginfo("wheel_accel_limit: %.3f rad/s/s", self.wheel_accel_limit)
+        rospy.loginfo("steer_rate_limit: %.3f rad/s", self.steer_rate_limit)
 
-    def clamp(self, value, min_value, max_value):
-        return max(min_value, min(max_value, value))
+    def clamp(self, value, lo, hi):
+        return max(lo, min(hi, value))
 
-    def step_towards(self, current, target, max_step):
-        if target > current + max_step:
-            return current + max_step
-        if target < current - max_step:
-            return current - max_step
+    def ramp_value(self, current, target, step):
+        if target > current + step:
+            return current + step
+        if target < current - step:
+            return current - step
         return target
 
-    def get_targets(self):
-        v = self.speed
+    def publish_commands(self, target_steer, target_wheel, dt):
+        steer_step = self.steer_rate_limit * dt
+        wheel_step = self.wheel_accel_limit * dt
 
-        steer_zero = {
+        for key in self.current_steer:
+            limited_target = self.clamp(
+                target_steer[key],
+                -self.max_steer_angle,
+                self.max_steer_angle,
+            )
+            self.current_steer[key] = self.ramp_value(
+                self.current_steer[key],
+                limited_target,
+                steer_step,
+            )
+            self.steer_pubs[key].publish(Float64(self.current_steer[key]))
+
+        for key in self.current_wheel:
+            limited_target = self.clamp(
+                target_wheel[key],
+                -self.max_wheel_speed,
+                self.max_wheel_speed,
+            )
+            self.current_wheel[key] = self.ramp_value(
+                self.current_wheel[key],
+                limited_target,
+                wheel_step,
+            )
+            self.wheel_pubs[key].publish(Float64(self.current_wheel[key]))
+
+    def stop_cmd(self):
+        steer = {
             "left_front": 0.0,
             "right_front": 0.0,
             "left_back": 0.0,
             "right_back": 0.0,
         }
+        wheel = {
+            "left_front": 0.0,
+            "right_front": 0.0,
+            "left_back": 0.0,
+            "right_back": 0.0,
+        }
+        return steer, wheel
 
+    def forward_cmd(self):
+        steer = {
+            "left_front": 0.0,
+            "right_front": 0.0,
+            "left_back": 0.0,
+            "right_back": 0.0,
+        }
+        wheel = {
+            "left_front": self.speed,
+            "right_front": self.speed,
+            "left_back": self.speed,
+            "right_back": self.speed,
+        }
+        return steer, wheel
+
+    def backward_cmd(self):
+        steer = {
+            "left_front": 0.0,
+            "right_front": 0.0,
+            "left_back": 0.0,
+            "right_back": 0.0,
+        }
+        wheel = {
+            "left_front": -self.speed,
+            "right_front": -self.speed,
+            "left_back": -self.speed,
+            "right_back": -self.speed,
+        }
+        return steer, wheel
+
+    def circle_cmd(self, direction):
+        """
+        Gentle 4-wheel-steering circle.
+        Front and rear steer opposite directions.
+        This is safer than true point-turn.
+        """
+        sign = 1.0 if direction == "left" else -1.0
+
+        if abs(self.circle_radius) < 0.5:
+            radius = 0.5
+        else:
+            radius = abs(self.circle_radius)
+
+        steer_angle = math.atan(self.wheelbase / radius)
+        steer_angle = self.clamp(steer_angle, -self.max_steer_angle, self.max_steer_angle)
+
+        wheel_speed = self.linear_speed / self.wheel_radius
+        wheel_speed = self.clamp(wheel_speed, -self.max_wheel_speed, self.max_wheel_speed)
+
+        steer = {
+            "left_front": sign * steer_angle,
+            "right_front": sign * steer_angle,
+            "left_back": -sign * steer_angle,
+            "right_back": -sign * steer_angle,
+        }
+
+        wheel = {
+            "left_front": wheel_speed,
+            "right_front": wheel_speed,
+            "left_back": wheel_speed,
+            "right_back": wheel_speed,
+        }
+
+        return steer, wheel
+
+    def spin_cmd(self, direction):
+        """
+        Safe near-in-place rotation.
+        This is intentionally not a perfect mathematical point turn.
+        It is softened because Gazebo was collapsing the robot with aggressive commands.
+        """
+        sign = 1.0 if direction == "left" else -1.0
+
+        a = self.clamp(self.spin_steer_angle, 0.0, self.max_steer_angle)
+        v = self.clamp(self.spin_speed, 0.0, self.max_wheel_speed)
+
+        steer = {
+            "left_front": -sign * a,
+            "right_front": sign * a,
+            "left_back": sign * a,
+            "right_back": -sign * a,
+        }
+
+        wheel = {
+            "left_front": -sign * v,
+            "right_front": sign * v,
+            "left_back": -sign * v,
+            "right_back": sign * v,
+        }
+
+        return steer, wheel
+
+    def get_target_commands(self):
         if self.mode == "stop":
-            return steer_zero, {
-                "left_front": 0.0,
-                "right_front": 0.0,
-                "left_back": 0.0,
-                "right_back": 0.0,
-            }
+            return self.stop_cmd()
 
         if self.mode == "forward":
-            return steer_zero, {
-                "left_front": v,
-                "right_front": v,
-                "left_back": v,
-                "right_back": v,
-            }
+            return self.forward_cmd()
 
         if self.mode == "backward":
-            return steer_zero, {
-                "left_front": -v,
-                "right_front": -v,
-                "left_back": -v,
-                "right_back": -v,
-            }
+            return self.backward_cmd()
 
-        if self.mode == "rotate_left":
-            # Use very low speed only. This is skid turning and can destabilize Gazebo.
-            return steer_zero, {
-                "left_front": -v,
-                "right_front": v,
-                "left_back": -v,
-                "right_back": v,
-            }
+        if self.mode == "circle_left":
+            return self.circle_cmd("left")
 
-        if self.mode == "rotate_right":
-            return steer_zero, {
-                "left_front": v,
-                "right_front": -v,
-                "left_back": v,
-                "right_back": -v,
-            }
+        if self.mode == "circle_right":
+            return self.circle_cmd("right")
 
-        if self.mode in ["circle_left", "circle_right"]:
-            R = abs(self.circle_radius)
-            V = self.linear_speed
-            L = self.wheelbase
-            W = self.track_width
-            r = self.wheel_radius
+        if self.mode == "spin_left":
+            return self.spin_cmd("left")
 
-            # Small 4-wheel steering approximation:
-            # front wheels steer into the turn, rear wheels steer opposite.
-            delta = math.atan(L / R)
-            delta = self.clamp(delta, -self.max_steer_angle, self.max_steer_angle)
+        if self.mode == "spin_right":
+            return self.spin_cmd("right")
 
-            if self.mode == "circle_left":
-                front_delta = delta
-                rear_delta = -delta
-
-                v_left = V * (R - W / 2.0) / R
-                v_right = V * (R + W / 2.0) / R
-
-            else:
-                front_delta = -delta
-                rear_delta = delta
-
-                v_left = V * (R + W / 2.0) / R
-                v_right = V * (R - W / 2.0) / R
-
-            wheel_left = v_left / r
-            wheel_right = v_right / r
-
-            wheel_left = self.clamp(wheel_left, -self.max_wheel_speed, self.max_wheel_speed)
-            wheel_right = self.clamp(wheel_right, -self.max_wheel_speed, self.max_wheel_speed)
-
-            steer_targets = {
-                "left_front": front_delta,
-                "right_front": front_delta,
-                "left_back": rear_delta,
-                "right_back": rear_delta,
-            }
-
-            wheel_targets = {
-                "left_front": wheel_left,
-                "right_front": wheel_right,
-                "left_back": wheel_left,
-                "right_back": wheel_right,
-            }
-
-            return steer_targets, wheel_targets
-
-        rospy.logwarn("Unknown mode '%s'. Stopping robot.", self.mode)
-        return steer_zero, {
-            "left_front": 0.0,
-            "right_front": 0.0,
-            "left_back": 0.0,
-            "right_back": 0.0,
-        }
+        rospy.logwarn_throttle(2.0, "Unknown mode '%s'. Stopping.", self.mode)
+        return self.stop_cmd()
 
     def run(self):
-        rate_hz = 50.0
-        rate = rospy.Rate(rate_hz)
-
-        wheel_step = self.accel_limit / rate_hz
-        steer_step = self.steer_rate_limit / rate_hz
+        rate = rospy.Rate(self.rate_hz)
+        last_time = rospy.Time.now()
 
         while not rospy.is_shutdown():
-            steer_targets, wheel_targets = self.get_targets()
+            now = rospy.Time.now()
+            dt = (now - last_time).to_sec()
 
-            for name in self.current_steer_cmd:
-                self.current_steer_cmd[name] = self.step_towards(
-                    self.current_steer_cmd[name],
-                    steer_targets[name],
-                    steer_step,
-                )
+            if dt <= 0.0 or dt > 1.0:
+                dt = 1.0 / self.rate_hz
 
-            for name in self.current_wheel_cmd:
-                self.current_wheel_cmd[name] = self.step_towards(
-                    self.current_wheel_cmd[name],
-                    wheel_targets[name],
-                    wheel_step,
-                )
+            last_time = now
 
-            for name, pub in self.steer_pubs.items():
-                pub.publish(Float64(self.current_steer_cmd[name]))
-
-            for name, pub in self.wheel_pubs.items():
-                pub.publish(Float64(self.current_wheel_cmd[name]))
+            target_steer, target_wheel = self.get_target_commands()
+            self.publish_commands(target_steer, target_wheel, dt)
 
             rate.sleep()
 
