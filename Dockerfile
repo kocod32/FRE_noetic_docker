@@ -40,6 +40,13 @@ RUN apt-get update && apt-get install -y \
     ros-noetic-vision-opencv \
     ros-noetic-depthimage-to-laserscan \
     ros-noetic-pointcloud-to-laserscan \
+    ros-noetic-ros-control \
+    ros-noetic-ros-controllers \
+    ros-noetic-controller-manager \
+    ros-noetic-joint-state-controller \
+    ros-noetic-position-controllers \
+    ros-noetic-velocity-controllers \
+    ros-noetic-effort-controllers \
     && rm -rf /var/lib/apt/lists/*
 
 RUN rosdep init || true

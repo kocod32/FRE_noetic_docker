@@ -1,6 +1,7 @@
 <launch>
   <arg name="world" default="$(find fre_task4_gazebo)/worlds/generated_task4.world"/>
   <arg name="model" default="$(find fre_task4_description)/urdf/farmbeast_robot.urdf.xacro"/>
+  <arg name="gui" default="false"/>
 
   <param name="robot_description" command="$(find xacro)/xacro $(arg model)" />
 
