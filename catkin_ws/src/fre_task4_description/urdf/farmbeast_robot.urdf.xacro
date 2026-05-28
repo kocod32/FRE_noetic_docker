@@ -1,10 +1,17 @@
 <?xml version="1.0"?>
 <robot name="Farmbeast" xmlns:xacro="http://www.ros.org/wiki/xacro">
 
-  <!-- Self-contained version: no velodyne_description dependency, no external inertial macro dependency. -->
-  <xacro:property name="pi" value="3.141592653589793"/>
+  <!-- ========================================================= -->
+  <!-- Farmbeast minimal 4-wheel steering robot for ROS1/Gazebo  -->
+  <!-- Self-contained: no external Velodyne or inertial macros    -->
+  <!-- ========================================================= -->
 
-  <!-- Basic inertial macros -->
+  <xacro:property name="PI_LOCAL" value="3.141592653589793"/>
+
+  <!-- ===================== -->
+  <!-- Inertial helper macros -->
+  <!-- ===================== -->
+
   <xacro:macro name="inertial_box" params="mass x y z *origin">
     <inertial>
       <xacro:insert_block name="origin"/>
@@ -19,7 +26,7 @@
     </inertial>
   </xacro:macro>
 
-  <xacro:macro name="inertial_cylinder" params="mass radius length *origin">
+  <xacro:macro name="inertial_cylinder_z" params="mass radius length *origin">
     <inertial>
       <xacro:insert_block name="origin"/>
       <mass value="${mass}"/>
@@ -33,46 +40,86 @@
     </inertial>
   </xacro:macro>
 
+  <!-- ========= -->
   <!-- Materials -->
-  <material name="white"><color rgba="1 1 1 1"/></material>
-  <material name="orange"><color rgba="1 0.45 0.0 1"/></material>
-  <material name="blue"><color rgba="0.05 0.05 1 1"/></material>
-  <material name="black"><color rgba="0 0 0 1"/></material>
-  <material name="grey"><color rgba="0.5 0.5 0.5 1"/></material>
+  <!-- ========= -->
 
-  <!-- Dimensions -->
+  <material name="white">
+    <color rgba="1.0 1.0 1.0 1.0"/>
+  </material>
+
+  <material name="orange">
+    <color rgba="1.0 0.45 0.0 1.0"/>
+  </material>
+
+  <material name="blue">
+    <color rgba="0.02 0.02 1.0 1.0"/>
+  </material>
+
+  <material name="black">
+    <color rgba="0.0 0.0 0.0 1.0"/>
+  </material>
+
+  <!-- ================= -->
+  <!-- Global dimensions -->
+  <!-- ================= -->
+
+  <!-- Chassis -->
   <xacro:property name="chassis_x" value="0.55"/>
   <xacro:property name="chassis_y" value="0.42"/>
   <xacro:property name="chassis_z" value="0.24"/>
+
+  <!-- Chassis center height.
+       Chassis bottom = chassis_center_z - chassis_z/2 = 0.12 m
+       Wheel top = wheel_z + wheel_radius = 0.20 m
+       So wheels visually overlap beside the body, not under it. -->
   <xacro:property name="chassis_center_z" value="0.24"/>
 
+  <!-- Wheels -->
   <xacro:property name="wheel_radius" value="0.10"/>
   <xacro:property name="wheel_width" value="0.045"/>
-  <xacro:property name="wheel_z" value="0.10"/>
+  <xacro:property name="wheel_z" value="${wheel_radius}"/>
 
+  <!-- Wheel module x positions -->
   <xacro:property name="wheel_x_front" value="0.22"/>
   <xacro:property name="wheel_x_back" value="-0.22"/>
 
-  <!-- Chassis_y = 0.42, half-width = 0.21.
-       Steering axis is just outside the chassis side.
-       Wheel center is slightly farther out, so the wheel visually sits close to the body. -->
-  <xacro:property name="steer_y_left" value="0.225"/>
-  <xacro:property name="steer_y_right" value="-0.225"/>
-  <xacro:property name="wheel_side_offset" value="0.035"/>
-
+  <!-- Steering / orange vertical cylinder -->
   <xacro:property name="steer_radius" value="0.025"/>
-  <xacro:property name="steer_length" value="0.12"/>
+  <xacro:property name="steer_length" value="0.16"/>
 
-  <!-- base_link is the ground/robot reference frame. Spawn with -z 0.0 or slightly above, e.g. 0.03. -->
+  <!-- Body half width = 0.42 / 2 = 0.21.
+       Steering center sits just outside the body:
+       0.21 + 0.025 = 0.235.
+       This makes the orange cylinder touch the body side. -->
+  <xacro:property name="steer_y_left" value="0.235"/>
+  <xacro:property name="steer_y_right" value="-0.235"/>
+
+  <!-- Wheel center offset from orange steering axis.
+       steer_radius + wheel_width/2 + small gap
+       = 0.025 + 0.0225 + 0.005 = 0.0525. -->
+  <xacro:property name="wheel_gap" value="0.00"/>
+  <xacro:property name="wheel_from_steer_y" value="${steer_radius + wheel_width/2.0 + wheel_gap}"/>
+
+  <!-- ===================== -->
+  <!-- Root frame / base link -->
+  <!-- ===================== -->
+
   <link name="base_link">
     <inertial>
       <origin xyz="0 0 0" rpy="0 0 0"/>
       <mass value="0.001"/>
-      <inertia ixx="1e-6" ixy="0" ixz="0" iyy="1e-6" iyz="0" izz="1e-6"/>
+      <inertia
+        ixx="1e-6" ixy="0.0" ixz="0.0"
+        iyy="1e-6" iyz="0.0"
+        izz="1e-6"/>
     </inertial>
   </link>
 
+  <!-- ======= -->
   <!-- Chassis -->
+  <!-- ======= -->
+
   <joint name="chassis_joint" type="fixed">
     <parent link="base_link"/>
     <child link="chassis"/>
@@ -82,45 +129,72 @@
   <link name="chassis">
     <visual>
       <origin xyz="0 0 0" rpy="0 0 0"/>
-      <geometry><box size="${chassis_x} ${chassis_y} ${chassis_z}"/></geometry>
+      <geometry>
+        <box size="${chassis_x} ${chassis_y} ${chassis_z}"/>
+      </geometry>
       <material name="white"/>
     </visual>
+
     <collision>
       <origin xyz="0 0 0" rpy="0 0 0"/>
-      <geometry><box size="${chassis_x} ${chassis_y} ${chassis_z}"/></geometry>
+      <geometry>
+        <box size="${chassis_x} ${chassis_y} ${chassis_z}"/>
+      </geometry>
     </collision>
+
     <xacro:inertial_box mass="5.0" x="${chassis_x}" y="${chassis_y}" z="${chassis_z}">
       <origin xyz="0 0 0" rpy="0 0 0"/>
     </xacro:inertial_box>
   </link>
 
-  <gazebo reference="chassis"><material>Gazebo/White</material></gazebo>
+  <gazebo reference="chassis">
+    <material>Gazebo/White</material>
+  </gazebo>
 
-  <!-- Reusable steering + wheel module -->
-  <xacro:macro name="steer_wheel" params="prefix x y side_sign">
+  <!-- ========================== -->
+  <!-- Steering + wheel module     -->
+  <!-- ========================== -->
+
+  <xacro:macro name="steer_wheel" params="prefix x_pos steer_y side_sign">
+
+    <!-- Steering joint: rotates orange vertical knuckle around Z. -->
     <joint name="${prefix}_z_axis_joint" type="revolute">
       <parent link="base_link"/>
       <child link="${prefix}_z_axis"/>
-      <origin xyz="${x} ${y} ${wheel_z}" rpy="0 0 0"/>
+      <origin xyz="${x_pos} ${steer_y} ${wheel_z}" rpy="0 0 0"/>
       <axis xyz="0 0 1"/>
-      <limit lower="-1.57" upper="1.57" effort="20" velocity="5"/>
+      <limit lower="-1.57" upper="1.57" effort="20.0" velocity="5.0"/>
       <dynamics damping="0.05" friction="0.02"/>
     </joint>
 
+    <!-- Orange vertical part.
+         Link frame is at wheel axle height.
+         Visual cylinder is shifted upward by steer_length/2,
+         so its bottom starts at wheel_z and extends upward. -->
     <link name="${prefix}_z_axis">
       <visual>
-        <origin xyz="0 0 0" rpy="0 0 0"/>
-        <geometry><cylinder radius="${steer_radius}" length="${steer_length}"/></geometry>
+        <origin xyz="0 0 ${steer_length/2.0}" rpy="0 0 0"/>
+        <geometry>
+          <cylinder radius="${steer_radius}" length="${steer_length}"/>
+        </geometry>
         <material name="orange"/>
       </visual>
+
       <collision>
-        <origin xyz="0 0 0" rpy="0 0 0"/>
-        <geometry><cylinder radius="${steer_radius}" length="${steer_length}"/></geometry>
+        <origin xyz="0 0 ${steer_length/2.0}" rpy="0 0 0"/>
+        <geometry>
+          <cylinder radius="${steer_radius}" length="${steer_length}"/>
+        </geometry>
       </collision>
-      <xacro:inertial_cylinder mass="0.15" length="${steer_length}" radius="${steer_radius}">
-        <origin xyz="0 0 0" rpy="0 0 0"/>
-      </xacro:inertial_cylinder>
+
+      <xacro:inertial_cylinder_z mass="0.15" radius="${steer_radius}" length="${steer_length}">
+        <origin xyz="0 0 ${steer_length/2.0}" rpy="0 0 0"/>
+      </xacro:inertial_cylinder_z>
     </link>
+
+    <gazebo reference="${prefix}_z_axis">
+      <material>Gazebo/Orange</material>
+    </gazebo>
 
     <transmission name="${prefix}_z_axis_trans">
       <type>transmission_interface/SimpleTransmission</type>
@@ -132,33 +206,47 @@
       </actuator>
     </transmission>
 
-    <gazebo reference="${prefix}_z_axis">
-      <material>Gazebo/Orange</material>
-    </gazebo>
-
+    <!-- Wheel joint.
+         IMPORTANT:
+         The joint frame must NOT be rotated.
+         The wheel rotates around the local Y axis.
+         Only the wheel geometry is rotated visually so the cylinder axis matches Y. -->
     <joint name="${prefix}_wheel_joint" type="continuous">
       <parent link="${prefix}_z_axis"/>
       <child link="${prefix}_wheel"/>
-      <!-- Wheel link frame sits at wheel centre. Cylinder is rotated so its axle is along robot Y. -->
-      <origin xyz="0 ${side_sign * wheel_side_offset} 0" rpy="-${pi/2} 0 0"/>
-      <axis xyz="0 0 1"/>
+      <origin xyz="0 ${side_sign * wheel_from_steer_y} 0" rpy="0 0 0"/>
+      <axis xyz="0 1 0"/>
       <dynamics damping="0.02" friction="0.01"/>
     </joint>
 
     <link name="${prefix}_wheel">
       <visual>
-        <origin xyz="0 0 0" rpy="0 0 0"/>
-        <geometry><cylinder radius="${wheel_radius}" length="${wheel_width}"/></geometry>
+        <origin xyz="0 0 0" rpy="${PI_LOCAL/2.0} 0 0"/>
+        <geometry>
+          <cylinder radius="${wheel_radius}" length="${wheel_width}"/>
+        </geometry>
         <material name="blue"/>
       </visual>
+
       <collision>
-        <origin xyz="0 0 0" rpy="0 0 0"/>
-        <geometry><cylinder radius="${wheel_radius}" length="${wheel_width}"/></geometry>
+        <origin xyz="0 0 0" rpy="${PI_LOCAL/2.0} 0 0"/>
+        <geometry>
+          <cylinder radius="${wheel_radius}" length="${wheel_width}"/>
+        </geometry>
       </collision>
-      <xacro:inertial_cylinder mass="0.25" length="${wheel_width}" radius="${wheel_radius}">
-        <origin xyz="0 0 0" rpy="0 0 0"/>
-      </xacro:inertial_cylinder>
+
+      <xacro:inertial_cylinder_z mass="0.25" radius="${wheel_radius}" length="${wheel_width}">
+        <origin xyz="0 0 0" rpy="${PI_LOCAL/2.0} 0 0"/>
+      </xacro:inertial_cylinder_z>
     </link>
+
+    <gazebo reference="${prefix}_wheel">
+      <material>Gazebo/Blue</material>
+      <mu1>2.0</mu1>
+      <mu2>2.0</mu2>
+      <kp>1000000.0</kp>
+      <kd>10.0</kd>
+    </gazebo>
 
     <transmission name="${prefix}_wheel_trans">
       <type>transmission_interface/SimpleTransmission</type>
@@ -170,47 +258,54 @@
       </actuator>
     </transmission>
 
-    <gazebo reference="${prefix}_wheel">
-      <material>Gazebo/Blue</material>
-      <mu1>2.0</mu1>
-      <mu2>2.0</mu2>
-      <kp>1000000.0</kp>
-      <kd>10.0</kd>
-    </gazebo>
   </xacro:macro>
 
-  <xacro:steer_wheel prefix="left_front"  x="${wheel_x_front}" y="${steer_y_left}"  side_sign="1"/>
-  <xacro:steer_wheel prefix="left_back"   x="${wheel_x_back}"  y="${steer_y_left}"  side_sign="1"/>
-  <xacro:steer_wheel prefix="right_front" x="${wheel_x_front}" y="${steer_y_right}" side_sign="-1"/>
-  <xacro:steer_wheel prefix="right_back"  x="${wheel_x_back}"  y="${steer_y_right}" side_sign="-1"/>
+  <!-- Left side: positive Y.
+       Right side: negative Y. -->
+  <xacro:steer_wheel prefix="left_front"  x_pos="${wheel_x_front}" steer_y="${steer_y_left}"  side_sign="1"/>
+  <xacro:steer_wheel prefix="left_back"   x_pos="${wheel_x_back}"  steer_y="${steer_y_left}"  side_sign="1"/>
+  <xacro:steer_wheel prefix="right_front" x_pos="${wheel_x_front}" steer_y="${steer_y_right}" side_sign="-1"/>
+  <xacro:steer_wheel prefix="right_back"  x_pos="${wheel_x_back}"  steer_y="${steer_y_right}" side_sign="-1"/>
 
-  <!-- Simple lidar placeholder. Keeps model self-contained. Replace later with VLP-16 when dependency is installed. -->
+  <!-- ============== -->
+  <!-- Lidar dummy     -->
+  <!-- ============== -->
+
   <joint name="lidar_joint" type="fixed">
     <parent link="chassis"/>
     <child link="lidar_link"/>
-    <origin xyz="0.12 0 0.145" rpy="0 0 0"/>
+    <origin xyz="0.12 0 ${chassis_z/2.0 + 0.025}" rpy="0 0 0"/>
   </joint>
 
   <link name="lidar_link">
     <visual>
       <origin xyz="0 0 0" rpy="0 0 0"/>
-      <geometry><cylinder radius="0.055" length="0.04"/></geometry>
+      <geometry>
+        <cylinder radius="0.055" length="0.04"/>
+      </geometry>
       <material name="black"/>
     </visual>
+
     <collision>
       <origin xyz="0 0 0" rpy="0 0 0"/>
-      <geometry><cylinder radius="0.055" length="0.04"/></geometry>
+      <geometry>
+        <cylinder radius="0.055" length="0.04"/>
+      </geometry>
     </collision>
-    <xacro:inertial_cylinder mass="0.3" length="0.04" radius="0.055">
+
+    <xacro:inertial_cylinder_z mass="0.3" radius="0.055" length="0.04">
       <origin xyz="0 0 0" rpy="0 0 0"/>
-    </xacro:inertial_cylinder>
+    </xacro:inertial_cylinder_z>
   </link>
 
   <gazebo reference="lidar_link">
     <material>Gazebo/DarkGrey</material>
   </gazebo>
 
-  <!-- ros_control bridge -->
+  <!-- ================== -->
+  <!-- Gazebo ros_control -->
+  <!-- ================== -->
+
   <gazebo>
     <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
       <robotNamespace>/farmbeast</robotNamespace>
