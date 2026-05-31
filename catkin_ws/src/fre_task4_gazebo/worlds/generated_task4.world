@@ -19,7 +19,7 @@
     
     <model name="corner_pole_0">
       <static>true</static>
-      <pose>4.474 0.674 0.275 0 0 0</pose>
+      <pose>3.684 6.067 0.275 0 0 0</pose>
       <link name="link">
         <visual name="visual">
           <geometry>
@@ -46,7 +46,7 @@
 
     <model name="reflector_0">
       <static>true</static>
-      <pose>4.474 0.674 0.600 0 0 0</pose>
+      <pose>3.684 6.067 0.600 0 0 0</pose>
       <link name="link">
         <visual name="visual">
           <geometry>
@@ -71,7 +71,7 @@
 
     <model name="corner_pole_1">
       <static>true</static>
-      <pose>3.068 3.082 0.275 0 0 0</pose>
+      <pose>-1.991 4.517 0.275 0 0 0</pose>
       <link name="link">
         <visual name="visual">
           <geometry>
@@ -98,7 +98,7 @@
 
     <model name="reflector_1">
       <static>true</static>
-      <pose>3.068 3.082 0.600 0 0 0</pose>
+      <pose>-1.991 4.517 0.600 0 0 0</pose>
       <link name="link">
         <visual name="visual">
           <geometry>
@@ -123,7 +123,7 @@
 
     <model name="corner_pole_2">
       <static>true</static>
-      <pose>3.194 3.432 0.275 0 0 0</pose>
+      <pose>-2.913 4.461 0.275 0 0 0</pose>
       <link name="link">
         <visual name="visual">
           <geometry>
@@ -150,7 +150,7 @@
 
     <model name="reflector_2">
       <static>true</static>
-      <pose>3.194 3.432 0.600 0 0 0</pose>
+      <pose>-2.913 4.461 0.600 0 0 0</pose>
       <link name="link">
         <visual name="visual">
           <geometry>
@@ -175,7 +175,7 @@
 
     <model name="corner_pole_3">
       <static>true</static>
-      <pose>-0.800 4.207 0.275 0 0 0</pose>
+      <pose>-3.131 0.747 0.275 0 0 0</pose>
       <link name="link">
         <visual name="visual">
           <geometry>
@@ -202,7 +202,7 @@
 
     <model name="reflector_3">
       <static>true</static>
-      <pose>-0.800 4.207 0.600 0 0 0</pose>
+      <pose>-3.131 0.747 0.600 0 0 0</pose>
       <link name="link">
         <visual name="visual">
           <geometry>
@@ -227,7 +227,7 @@
 
     <model name="corner_pole_4">
       <static>true</static>
-      <pose>-4.559 2.742 0.275 0 0 0</pose>
+      <pose>-3.266 -1.628 0.275 0 0 0</pose>
       <link name="link">
         <visual name="visual">
           <geometry>
@@ -254,7 +254,7 @@
 
     <model name="reflector_4">
       <static>true</static>
-      <pose>-4.559 2.742 0.600 0 0 0</pose>
+      <pose>-3.266 -1.628 0.600 0 0 0</pose>
       <link name="link">
         <visual name="visual">
           <geometry>
@@ -279,7 +279,7 @@
 
     <model name="corner_pole_5">
       <static>true</static>
-      <pose>-4.881 -5.225 0.275 0 0 0</pose>
+      <pose>-2.531 -2.898 0.275 0 0 0</pose>
       <link name="link">
         <visual name="visual">
           <geometry>
@@ -306,7 +306,7 @@
 
     <model name="reflector_5">
       <static>true</static>
-      <pose>-4.881 -5.225 0.600 0 0 0</pose>
+      <pose>-2.531 -2.898 0.600 0 0 0</pose>
       <link name="link">
         <visual name="visual">
           <geometry>
@@ -331,7 +331,7 @@
 
     <model name="corner_pole_6">
       <static>true</static>
-      <pose>-2.178 -5.180 0.275 0 0 0</pose>
+      <pose>-1.588 -2.602 0.275 0 0 0</pose>
       <link name="link">
         <visual name="visual">
           <geometry>
@@ -358,7 +358,7 @@
 
     <model name="reflector_6">
       <static>true</static>
-      <pose>-2.178 -5.180 0.600 0 0 0</pose>
+      <pose>-1.588 -2.602 0.600 0 0 0</pose>
       <link name="link">
         <visual name="visual">
           <geometry>
@@ -383,7 +383,7 @@
 
     <model name="corner_pole_7">
       <static>true</static>
-      <pose>1.682 -3.733 0.275 0 0 0</pose>
+      <pose>-0.775 -1.420 0.275 0 0 0</pose>
       <link name="link">
         <visual name="visual">
           <geometry>
@@ -410,7 +410,267 @@
 
     <model name="reflector_7">
       <static>true</static>
-      <pose>1.682 -3.733 0.600 0 0 0</pose>
+      <pose>-0.775 -1.420 0.600 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <sphere>
+              <radius>0.07</radius>
+            </sphere>
+          </geometry>
+          <material>
+            <ambient>1.0 0.6 0.05 1</ambient>
+            <diffuse>1.0 0.6 0.05 1</diffuse>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <sphere>
+              <radius>0.07</radius>
+            </sphere>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+
+    <model name="corner_pole_8">
+      <static>true</static>
+      <pose>-1.877 -3.895 0.275 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <cylinder>
+              <radius>0.03</radius>
+              <length>0.55</length>
+            </cylinder>
+          </geometry>
+          <material>
+            <ambient>0.05 0.05 0.05 1</ambient>
+            <diffuse>0.05 0.05 0.05 1</diffuse>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <cylinder>
+              <radius>0.03</radius>
+              <length>0.55</length>
+            </cylinder>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+
+    <model name="reflector_8">
+      <static>true</static>
+      <pose>-1.877 -3.895 0.600 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <sphere>
+              <radius>0.07</radius>
+            </sphere>
+          </geometry>
+          <material>
+            <ambient>1.0 0.6 0.05 1</ambient>
+            <diffuse>1.0 0.6 0.05 1</diffuse>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <sphere>
+              <radius>0.07</radius>
+            </sphere>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+
+    <model name="corner_pole_9">
+      <static>true</static>
+      <pose>0.026 -1.972 0.275 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <cylinder>
+              <radius>0.03</radius>
+              <length>0.55</length>
+            </cylinder>
+          </geometry>
+          <material>
+            <ambient>0.05 0.05 0.05 1</ambient>
+            <diffuse>0.05 0.05 0.05 1</diffuse>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <cylinder>
+              <radius>0.03</radius>
+              <length>0.55</length>
+            </cylinder>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+
+    <model name="reflector_9">
+      <static>true</static>
+      <pose>0.026 -1.972 0.600 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <sphere>
+              <radius>0.07</radius>
+            </sphere>
+          </geometry>
+          <material>
+            <ambient>1.0 0.6 0.05 1</ambient>
+            <diffuse>1.0 0.6 0.05 1</diffuse>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <sphere>
+              <radius>0.07</radius>
+            </sphere>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+
+    <model name="corner_pole_10">
+      <static>true</static>
+      <pose>3.520 -3.804 0.275 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <cylinder>
+              <radius>0.03</radius>
+              <length>0.55</length>
+            </cylinder>
+          </geometry>
+          <material>
+            <ambient>0.05 0.05 0.05 1</ambient>
+            <diffuse>0.05 0.05 0.05 1</diffuse>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <cylinder>
+              <radius>0.03</radius>
+              <length>0.55</length>
+            </cylinder>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+
+    <model name="reflector_10">
+      <static>true</static>
+      <pose>3.520 -3.804 0.600 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <sphere>
+              <radius>0.07</radius>
+            </sphere>
+          </geometry>
+          <material>
+            <ambient>1.0 0.6 0.05 1</ambient>
+            <diffuse>1.0 0.6 0.05 1</diffuse>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <sphere>
+              <radius>0.07</radius>
+            </sphere>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+
+    <model name="corner_pole_11">
+      <static>true</static>
+      <pose>5.375 0.641 0.275 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <cylinder>
+              <radius>0.03</radius>
+              <length>0.55</length>
+            </cylinder>
+          </geometry>
+          <material>
+            <ambient>0.05 0.05 0.05 1</ambient>
+            <diffuse>0.05 0.05 0.05 1</diffuse>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <cylinder>
+              <radius>0.03</radius>
+              <length>0.55</length>
+            </cylinder>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+
+    <model name="reflector_11">
+      <static>true</static>
+      <pose>5.375 0.641 0.600 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <sphere>
+              <radius>0.07</radius>
+            </sphere>
+          </geometry>
+          <material>
+            <ambient>1.0 0.6 0.05 1</ambient>
+            <diffuse>1.0 0.6 0.05 1</diffuse>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <sphere>
+              <radius>0.07</radius>
+            </sphere>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+
+    <model name="corner_pole_12">
+      <static>true</static>
+      <pose>5.467 1.786 0.275 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <cylinder>
+              <radius>0.03</radius>
+              <length>0.55</length>
+            </cylinder>
+          </geometry>
+          <material>
+            <ambient>0.05 0.05 0.05 1</ambient>
+            <diffuse>0.05 0.05 0.05 1</diffuse>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <cylinder>
+              <radius>0.03</radius>
+              <length>0.55</length>
+            </cylinder>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+
+    <model name="reflector_12">
+      <static>true</static>
+      <pose>5.467 1.786 0.600 0 0 0</pose>
       <link name="link">
         <visual name="visual">
           <geometry>
@@ -435,12 +695,12 @@
 
     <model name="debug_boundary_0">
       <static>true</static>
-      <pose>3.771 1.878 0.015 0 0 2.099</pose>
+      <pose>0.847 5.292 0.015 0 0 -2.875</pose>
       <link name="link">
         <visual name="visual">
           <geometry>
             <box>
-              <size>2.789 0.035 0.03</size>
+              <size>5.883 0.035 0.03</size>
             </box>
           </geometry>
           <material>
@@ -453,12 +713,12 @@
 
     <model name="debug_boundary_1">
       <static>true</static>
-      <pose>3.131 3.257 0.015 0 0 1.225</pose>
+      <pose>-2.452 4.489 0.015 0 0 -3.082</pose>
       <link name="link">
         <visual name="visual">
           <geometry>
             <box>
-              <size>0.372 0.035 0.03</size>
+              <size>0.924 0.035 0.03</size>
             </box>
           </geometry>
           <material>
@@ -471,12 +731,12 @@
 
     <model name="debug_boundary_2">
       <static>true</static>
-      <pose>1.197 3.820 0.015 0 0 2.950</pose>
+      <pose>-3.022 2.604 0.015 0 0 -1.629</pose>
       <link name="link">
         <visual name="visual">
           <geometry>
             <box>
-              <size>4.068 0.035 0.03</size>
+              <size>3.721 0.035 0.03</size>
             </box>
           </geometry>
           <material>
@@ -489,12 +749,12 @@
 
     <model name="debug_boundary_3">
       <static>true</static>
-      <pose>-2.679 3.475 0.015 0 0 -2.770</pose>
+      <pose>-3.198 -0.440 0.015 0 0 -1.628</pose>
       <link name="link">
         <visual name="visual">
           <geometry>
             <box>
-              <size>4.035 0.035 0.03</size>
+              <size>2.378 0.035 0.03</size>
             </box>
           </geometry>
           <material>
@@ -507,12 +767,12 @@
 
     <model name="debug_boundary_4">
       <static>true</static>
-      <pose>-4.720 -1.241 0.015 0 0 -1.611</pose>
+      <pose>-2.899 -2.263 0.015 0 0 -1.046</pose>
       <link name="link">
         <visual name="visual">
           <geometry>
             <box>
-              <size>7.973 0.035 0.03</size>
+              <size>1.467 0.035 0.03</size>
             </box>
           </geometry>
           <material>
@@ -525,12 +785,12 @@
 
     <model name="debug_boundary_5">
       <static>true</static>
-      <pose>-3.529 -5.202 0.015 0 0 0.017</pose>
+      <pose>-2.060 -2.750 0.015 0 0 0.304</pose>
       <link name="link">
         <visual name="visual">
           <geometry>
             <box>
-              <size>2.704 0.035 0.03</size>
+              <size>0.989 0.035 0.03</size>
             </box>
           </geometry>
           <material>
@@ -543,12 +803,12 @@
 
     <model name="debug_boundary_6">
       <static>true</static>
-      <pose>-0.248 -4.456 0.015 0 0 0.359</pose>
+      <pose>-1.181 -2.011 0.015 0 0 0.968</pose>
       <link name="link">
         <visual name="visual">
           <geometry>
             <box>
-              <size>4.121 0.035 0.03</size>
+              <size>1.435 0.035 0.03</size>
             </box>
           </geometry>
           <material>
@@ -561,12 +821,102 @@
 
     <model name="debug_boundary_7">
       <static>true</static>
-      <pose>3.078 -1.530 0.015 0 0 1.006</pose>
+      <pose>-1.326 -2.657 0.015 0 0 -1.990</pose>
       <link name="link">
         <visual name="visual">
           <geometry>
             <box>
-              <size>5.217 0.035 0.03</size>
+              <size>2.710 0.035 0.03</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>0.1 0.8 0.1 1</ambient>
+            <diffuse>0.1 0.8 0.1 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="debug_boundary_8">
+      <static>true</static>
+      <pose>-0.925 -2.933 0.015 0 0 0.791</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>2.706 0.035 0.03</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>0.1 0.8 0.1 1</ambient>
+            <diffuse>0.1 0.8 0.1 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="debug_boundary_9">
+      <static>true</static>
+      <pose>1.773 -2.888 0.015 0 0 -0.483</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>3.945 0.035 0.03</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>0.1 0.8 0.1 1</ambient>
+            <diffuse>0.1 0.8 0.1 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="debug_boundary_10">
+      <static>true</static>
+      <pose>4.447 -1.582 0.015 0 0 1.175</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>4.817 0.035 0.03</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>0.1 0.8 0.1 1</ambient>
+            <diffuse>0.1 0.8 0.1 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="debug_boundary_11">
+      <static>true</static>
+      <pose>5.421 1.213 0.015 0 0 1.490</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>1.149 0.035 0.03</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>0.1 0.8 0.1 1</ambient>
+            <diffuse>0.1 0.8 0.1 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="debug_boundary_12">
+      <static>true</static>
+      <pose>4.576 3.926 0.015 0 0 1.965</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>4.637 0.035 0.03</size>
             </box>
           </geometry>
           <material>
